@@ -10,12 +10,16 @@ public class UiControllerScript : MonoBehaviour
     TextMeshProUGUI NextFruit;
 
     private int score = 0;
+    public GameObject data;
+
+    private GameObject gameManager;
 
     // Start is called before the first frame update
     void Start()
     {
         SceneManager.LoadScene("UIScene", LoadSceneMode.Additive);
         SceneManager.sceneLoaded += OnSceneLoaded;
+        gameManager = GameObject.FindGameObjectWithTag("GameManager");
     }
 
     // Update is called once per frame
@@ -26,6 +30,7 @@ public class UiControllerScript : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        GameObject.FindGameObjectWithTag("HighScore").GetComponent<TextMeshProUGUI>().text = gameManager.GetComponent<GameManagerScript>().HighScore.ToString();
         Score = GameObject.FindGameObjectWithTag("Score").GetComponent<TextMeshProUGUI>();
         UpdateScore();
         NextFruit = GameObject.FindGameObjectWithTag("NextFruit").GetComponent<TextMeshProUGUI>();
@@ -36,12 +41,13 @@ public class UiControllerScript : MonoBehaviour
         this.score += score;
         Score.text = $"Score: {this.score}";
     }
-    public void GameOver()
+    public int GetScore()
     {
-        SceneManager.LoadScene("SampleScene", LoadSceneMode.Single);
+        return score;
     }
     public void ChangeNextFruit(string fruit)
     {
+        //Debug.Log(NextFruit == null);////////////////////////
         NextFruit.text = $"Next Fruit: {fruit}";
     }
 }

@@ -75,7 +75,7 @@ public class SpawnerScript : MonoBehaviour
                 newFruit = Instantiate(Melon, position, Quaternion.identity);
                 break;
 
-            case "Watermellon":
+            case "Watermelon":
                 newFruit = Instantiate(Watermelon, position, Quaternion.identity);
                 break;
         }
@@ -122,11 +122,11 @@ public class SpawnerScript : MonoBehaviour
                 break;
 
             case "Melon":
-                tag = "Watermellon";
+                tag = "Watermelon";
                 break;
 
-            case "Watermellon":
-                tag = "Watermellon";
+            case "Watermelon":
+                tag = "Watermelon";
                 break;
         }
         SpawnFruit(tag, position).GetComponent<FruitScript>().GetCombined();

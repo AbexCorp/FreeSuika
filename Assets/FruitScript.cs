@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -11,6 +13,8 @@ public class FruitScript : MonoBehaviour
 
     private GameObject spawner;
     private GameObject uiController;
+    private GameObject gameManager;
+    //public GameObject gameDirector;
 
     private float maxSize;
     private string tagOfThis;
@@ -27,6 +31,7 @@ public class FruitScript : MonoBehaviour
         tagOfThis = this.gameObject.tag;
         spawner = GameObject.FindGameObjectWithTag("Spawn");
         uiController = GameObject.FindGameObjectWithTag("UIController");
+        gameManager = GameObject.FindGameObjectWithTag("GameManager");
         maxSize = gameObject.transform.localScale.x;
     }
 
@@ -46,7 +51,7 @@ public class FruitScript : MonoBehaviour
             StartCoroutine(CheckIfGameOver());
         }
     }
-    //7.75
+
 
     void OnTriggerEnter2D(Collider2D other)
     {
@@ -72,10 +77,11 @@ public class FruitScript : MonoBehaviour
     private IEnumerator CheckIfGameOver()
     {
         yield return new WaitForSeconds(1.5f);
-        if (IsOutsideOfTheGame())
-            uiController.GetComponent<UiControllerScript>().GameOver();
+        if (IsOutsideOfTheGame() && !gameManager.GetComponent<GameManagerScript>().Lost)
+            gameManager.GetComponent<GameManagerScript>().GameOver();
         prepareToDie = false;
     }
+
 
 
     private void Combine(FruitScript fruit)
@@ -84,12 +90,14 @@ public class FruitScript : MonoBehaviour
         Vector2 thatFruit = fruit.transform.position;
         Destroy(fruit.gameObject);
         Vector3 position = (thisFruit + thatFruit) / 2;
+        gameManager.GetComponent<GameManagerScript>().PlayFruitPop();
         spawner.GetComponent<SpawnerScript>().SpawnBiggerFruit(tagOfThis, position);
         uiController.GetComponent<UiControllerScript>().UpdateScore(ScoreForCombine);
         Destroy(this.gameObject);
     }
     public void GetCombined()
-    {
+    {     
+        wasDropped = true;
         WillGrow = true;
         scale = 0.1f;
         gameObject.transform.localScale.Set(scale * maxSize, scale * maxSize, scale);
@@ -107,6 +115,7 @@ public class FruitScript : MonoBehaviour
     }
 
 
+    //Fix starting fruit bug   SOLUTION: Caused by ui exception because ui is not yet loaded
     //Hud (score, evolution, next fruit)
     //graphics
 }

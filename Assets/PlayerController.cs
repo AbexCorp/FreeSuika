@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour, InputControlls.IPlayerActions
 {
     public GameObject spawner;
     private GameObject uiController;
+    private GameObject gameManager;
     InputControlls controlls;
 
     private float mousePosition;
@@ -28,6 +29,9 @@ public class PlayerController : MonoBehaviour, InputControlls.IPlayerActions
             spawner = GameObject.FindGameObjectWithTag("Spawn");
         if(uiController == null)
             uiController = GameObject.FindGameObjectWithTag("UIController");
+        if(gameManager == null)
+            gameManager = GameObject.FindGameObjectWithTag("GameManager");
+
         if(controlls == null)
         {
             controlls = new InputControlls();
@@ -39,17 +43,24 @@ public class PlayerController : MonoBehaviour, InputControlls.IPlayerActions
         fruitReady = false;
         nowFruit = null;
         laterFruit = null;
+        Debug.Log($"START 1   fruitHadTime-{fruitHadTime}   fruitReady-{fruitReady}   currentFruit-{currentFruit is null}");
         PrepareFruit();
+        Debug.Log($"START 2   fruitHadTime-{fruitHadTime}   fruitReady-{fruitReady}   currentFruit-{currentFruit is null}");
     }
 
+    int i = 0;
     // Update is called once per frame
     void Update()
     {
-        if (fruitHadTime)
+        Debug.Log($"BEFORE   fruitHadTime-{fruitHadTime}   fruitReady-{fruitReady}   currentFruit-{currentFruit is null}");
+        Debug.Log($"Iteration {i}");////////////////////////////////////////
+        i++;
+        if (fruitHadTime && !gameManager.GetComponent<GameManagerScript>().Lost)
         {
             mousePosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue()).x;
             if(!fruitReady || currentFruit is null)
             {
+                Debug.Log($"AFTER   fruitHadTime-{fruitHadTime}   fruitReady-{fruitReady}   currentFruit-{currentFruit is null}");
                 PrepareFruit();
             }
             else
@@ -65,7 +76,7 @@ public class PlayerController : MonoBehaviour, InputControlls.IPlayerActions
 
     public void OnDropFruit(InputAction.CallbackContext context)
     {
-        if(context.started && fruitHadTime)
+        if(context.started && fruitHadTime && !gameManager.GetComponent<GameManagerScript>().Lost)
         {
             fruitReady = false;
             if (currentFruit == null) Debug.Log("2");
@@ -86,7 +97,6 @@ public class PlayerController : MonoBehaviour, InputControlls.IPlayerActions
 
     private GameObject PrepareFruit()
     {
-        if (currentFruit == null) Debug.Log("3");
         currentFruit = null;
         if(nowFruit is null || laterFruit is null)
         {

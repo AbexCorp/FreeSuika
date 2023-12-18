@@ -22,6 +22,8 @@ TagManager:
   - Score
   - UIController
   - NextFruit
+  - GameManager
+  - HighScore
   layers:
   - Default
   - TransparentFX
