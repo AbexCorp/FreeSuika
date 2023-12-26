@@ -24,6 +24,7 @@ TagManager:
   - NextFruit
   - GameManager
   - HighScore
+  - MenuButton
   layers:
   - Default
   - TransparentFX
